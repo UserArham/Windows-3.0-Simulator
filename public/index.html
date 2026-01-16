@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Windows 3.0 Simulator</title>
+  <title>Windows 3.0 Web Simulator</title>
   <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css" />
   <style>
     html, body, #dos {
@@ -13,27 +13,26 @@
 <body>
   <div id="dos"></div>
 
-  <!-- js-dos engine -->
+  <!-- Load js-dos -->
   <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
-
   <script>
-    // Start DOSBox
+    // Initialize DOSBox
     Dos(document.getElementById("dos"), {
-      url: "https://v8.js-dos.com/latest/wdosbox.js",
+      url: "https://v8.js-dos.com/latest/wdosbox.js"
     }).ready()
     .then(emulator => {
-      // Bind floppy images from /public folder
+      // Mount all 4 floppy disks from root
       return emulator.fs.bind({
         mount: [
           {drive: 'A:', url: '/DISK01.IMG', type: 'floppy'},
           {drive: 'B:', url: '/DISK02.IMG', type: 'floppy'},
           {drive: 'C:', url: '/DISK03.IMG', type: 'floppy'},
-          {drive: 'D:', url: '/DISK04.IMG', type: 'floppy'},
+          {drive: 'D:', url: '/DISK04.IMG', type: 'floppy'}
         ]
       }).then(() => emulator);
     })
     .then(emulator => {
-      // Run DOSBox with autoexec commands
+      // Run DOSBox and start Windows 3.0 setup automatically
       emulator.run({
         dosboxConf: `
           [dosbox]
