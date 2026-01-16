@@ -1,56 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Windows 3.0 Simulator</title>
-
-  <!-- js-dos UI -->
-  <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
-
+  <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css" />
   <style>
-    /* Inline CSS */
-    html, body {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      background: black;
-      overflow: hidden;
-    }
-
-    #dos {
-      width: 100%;
-      height: 100%;
+    html, body, #dos {
+      margin: 0; padding: 0; height: 100%; width: 100%; background: black;
     }
   </style>
 </head>
 <body>
-
-<div id="dos"></div>
-
-<!-- js-dos engine -->
-<script src="https://v8.js-dos.com/latest/js-dos.js"></script>
-
-<script>
-  // Inline JS
-  Dos(document.getElementById("dos"), {
-    url: "https://v8.js-dos.com/latest/wdosbox.js",
-  }).run({
-    dosboxConf: `
-      [dosbox]
-      memsize=16
-
-      [cpu]
-      core=auto
-      cycles=auto
-
-      [autoexec]
-      mount c .
-      mount a DISK01.IMG -t floppy
-      a:
-      SETUP
-    `
-  });
-</script>
-
+  <div id="dos"></div>
+  <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+  <script>
+    Dos(document.getElementById("dos"), {
+      url: "https://v8.js-dos.com/latest/wdosbox.js",
+    }).ready()
+    .then(emulator => {
+      // Mount disk images as floppy drives A, B, C, D
+      return emulator.fs.bind({
+        mount: [
+          {drive: 'A:', url: 'DISK01.IMG', type: 'floppy'},
+          {drive: 'B:', url: 'DISK02.IMG', type: 'floppy'},
+          {drive: 'C:', url: 'DISK03.IMG', type: 'floppy'},
+          {drive: 'D:', url: 'DISK04.IMG', type: 'floppy'},
+        ]
+      }).then(() => emulator);
+    }).then(emulator => {
+      // Run DOSBox with autoexec commands
+      emulator.run({
+        dosboxConf: `
+          [dosbox]
+          memsize=16
+          [cpu]
+          core=auto
+          cycles=auto
+          [autoexec]
+          mount a A:
+          a:
+          SETUP
+        `
+      });
+    });
+  </script>
 </body>
 </html>
