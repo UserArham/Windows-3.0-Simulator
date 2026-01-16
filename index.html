@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Windows 3.0 Simulator</title>
+
+  <!-- js-dos UI -->
+  <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css">
+
+  <style>
+    /* Inline CSS */
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      background: black;
+      overflow: hidden;
+    }
+
+    #dos {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="dos"></div>
+
+<!-- js-dos engine -->
+<script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+
+<script>
+  // Inline JS
+  Dos(document.getElementById("dos"), {
+    url: "https://v8.js-dos.com/latest/wdosbox.js",
+  }).run({
+    dosboxConf: `
+      [dosbox]
+      memsize=16
+
+      [cpu]
+      core=auto
+      cycles=auto
+
+      [autoexec]
+      mount c .
+      mount a DISK01.IMG -t floppy
+      a:
+      SETUP
+    `
+  });
+</script>
+
+</body>
+</html>
