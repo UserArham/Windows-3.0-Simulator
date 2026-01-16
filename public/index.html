@@ -8,46 +8,86 @@
     html, body, #dos {
       margin: 0; padding: 0; width: 100%; height: 100%; background: black;
     }
+    #disk-controls {
+      position: absolute; top: 10px; left: 10px; z-index: 10;
+      background: rgba(255,255,255,0.9); padding: 8px; border-radius: 4px;
+    }
+    #disk-controls select, #disk-controls button {
+      margin: 2px;
+    }
   </style>
 </head>
 <body>
   <div id="dos"></div>
 
-  <!-- Load js-dos -->
+  <!-- Disk mount UI -->
+  <div id="disk-controls">
+    <label for="drive">Drive:</label>
+    <select id="drive">
+      <option value="A:">A:</option>
+      <option value="B:">B:</option>
+      <option value="C:">C:</option>
+      <option value="D:">D:</option>
+    </select>
+    <label for="disk">Disk:</label>
+    <select id="disk">
+      <option value="DISK01.IMG">DISK01</option>
+      <option value="DISK02.IMG">DISK02</option>
+      <option value="DISK03.IMG">DISK03</option>
+      <option value="DISK04.IMG">DISK04</option>
+    </select>
+    <button id="mountBtn">Mount</button>
+  </div>
+
   <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
   <script>
-    // Initialize DOSBox
+    const baseURL = "https://raw.githubusercontent.com/UserArham/Windows-3.0-Simulator/main/public";
+    let emulatorInstance;
+
     Dos(document.getElementById("dos"), {
       url: "https://v8.js-dos.com/latest/wdosbox.js"
-    }).ready()
-    .then(emulator => {
-      // Mount all 4 floppy disks from root
+    }).ready().then(emulator => {
+      emulatorInstance = emulator;
+
+      // Initial mounting of all disks
       return emulator.fs.bind({
         mount: [
-          {drive: 'A:', url: '/DISK01.IMG', type: 'floppy'},
-          {drive: 'B:', url: '/DISK02.IMG', type: 'floppy'},
-          {drive: 'C:', url: '/DISK03.IMG', type: 'floppy'},
-          {drive: 'D:', url: '/DISK04.IMG', type: 'floppy'}
+          {drive: 'A:', url: `${baseURL}/DISK01.IMG`, type: 'floppy'},
+          {drive: 'B:', url: `${baseURL}/DISK02.IMG`, type: 'floppy'},
+          {drive: 'C:', url: `${baseURL}/DISK03.IMG`, type: 'floppy'},
+          {drive: 'D:', url: `${baseURL}/DISK04.IMG`, type: 'floppy'}
         ]
       }).then(() => emulator);
-    })
-    .then(emulator => {
-      // Run DOSBox and start Windows 3.0 setup automatically
+    }).then(emulator => {
+      // Start Windows 3.0 setup automatically
       emulator.run({
         dosboxConf: `
           [dosbox]
           memsize=16
-
           [cpu]
           core=auto
           cycles=auto
-
           [autoexec]
           mount a A:
           a:
           SETUP
         `
       });
+    });
+
+    // Disk swapping logic
+    document.getElementById("mountBtn").addEventListener("click", () => {
+      const drive = document.getElementById("drive").value;
+      const disk = document.getElementById("disk").value;
+
+      if (!emulatorInstance) return alert("Emulator not ready yet!");
+
+      // Mount selected disk on chosen drive
+      emulatorInstance.fs.bind({
+        mount: [{drive: drive, url: `${baseURL}/${disk}`, type: 'floppy'}]
+      }).then(() => {
+        alert(`Mounted ${disk} on drive ${drive}`);
+      }).catch(err => alert("Error mounting disk: " + err));
     });
   </script>
 </body>
