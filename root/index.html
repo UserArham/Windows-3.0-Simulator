@@ -1,41 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Windows 3.0 Simulator</title>
   <link rel="stylesheet" href="https://v8.js-dos.com/latest/js-dos.css" />
   <style>
     html, body, #dos {
-      margin: 0; padding: 0; height: 100%; width: 100%; background: black;
+      margin: 0; padding: 0; width: 100%; height: 100%; background: black;
     }
   </style>
 </head>
 <body>
   <div id="dos"></div>
+
+  <!-- js-dos engine -->
   <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
+
   <script>
+    // Start DOSBox
     Dos(document.getElementById("dos"), {
       url: "https://v8.js-dos.com/latest/wdosbox.js",
     }).ready()
     .then(emulator => {
-      // Mount disk images as floppy drives A, B, C, D
+      // Bind floppy images from /public folder
       return emulator.fs.bind({
         mount: [
-          {drive: 'A:', url: 'DISK01.IMG', type: 'floppy'},
-          {drive: 'B:', url: 'DISK02.IMG', type: 'floppy'},
-          {drive: 'C:', url: 'DISK03.IMG', type: 'floppy'},
-          {drive: 'D:', url: 'DISK04.IMG', type: 'floppy'},
+          {drive: 'A:', url: '/DISK01.IMG', type: 'floppy'},
+          {drive: 'B:', url: '/DISK02.IMG', type: 'floppy'},
+          {drive: 'C:', url: '/DISK03.IMG', type: 'floppy'},
+          {drive: 'D:', url: '/DISK04.IMG', type: 'floppy'},
         ]
       }).then(() => emulator);
-    }).then(emulator => {
+    })
+    .then(emulator => {
       // Run DOSBox with autoexec commands
       emulator.run({
         dosboxConf: `
           [dosbox]
           memsize=16
+
           [cpu]
           core=auto
           cycles=auto
+
           [autoexec]
           mount a A:
           a:
