@@ -1,7 +1,7 @@
 # 🖥️ Windows 3.0 Web Simulator
 
 This project runs **Windows 3.0** entirely in a browser using **js-dos**.  
-It is designed to work on **NYCDOE Chromebooks**, **ChromeOS**, or any modern browser via **Vercel deployment**.  
+It is designed to work on **restricted Chromebooks**, **ChromeOS**, or any modern browser via **Vercel deployment**.  
 
 ---
 
