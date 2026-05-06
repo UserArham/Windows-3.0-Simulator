@@ -7,16 +7,14 @@ It is designed to work on **restricted Chromebooks**, **ChromeOS**, or any moder
 
 ## 📁 Project Files
 
-All files should be in the **same folder**, no subfolders or ZIPs:``
+All files should be in the **same folder**, no subfolders or ZIPs:
 ``` alternate
 index.html
 DISK01.IMG
 DISK02.IMG
 DISK03.IMG
 DISK04.IMG
-```
-yaml
-Copy code
+````
 
 - `index.html` — single-file HTML containing all CSS and JavaScript  
 - `DISK01.IMG` … `DISK04.IMG` — original Windows 3.0 installation floppy images  
